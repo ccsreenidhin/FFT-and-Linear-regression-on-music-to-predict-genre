@@ -1,6 +1,6 @@
 # ============================================
 # Auther: C C Sreenidhin
-# Company: Audrey Technologies
+# Company: Techstack Innovations LLP
 # Project: Music Analyser
 # Date:01-09-2017
 # ============================================
@@ -11,6 +11,7 @@ import Tkinter, ttk, tkFileDialog
 #=============================================
 from links import *
 from analy import *
+from action import *
 
 #=============================================
 
@@ -29,11 +30,11 @@ class musicAnalyser(Frame):
     master.columnconfigure(1, weight=1)
 
     #Music player display frame
-    frame1 = Frame(master, bd=2, bg="black")
+    frame1 = Frame(master, bd=2, bg="white")
     frame1.grid(row = 0, column = 0, sticky = "ns")
 
     #Analysis and result Frame
-    frame2 = Frame(master, bd=2, relief=SUNKEN)
+    frame2 = Frame(master, bd=2, bg="white", relief=SUNKEN)
     frame2.grid(row = 0, column = 1, sticky = W+E+N+S)
 
     #row and column configure frame1
@@ -58,7 +59,12 @@ class musicAnalyser(Frame):
     frame2.rowconfigure(0, pad=3)
     frame2.rowconfigure(1, pad=3)
     frame2.rowconfigure(2, pad=3)
-    frame2.rowconfigure(3, pad=3, weight = 1)
+    frame2.rowconfigure(3, pad=3)
+    frame2.rowconfigure(4, pad=3)
+    frame2.rowconfigure(5, pad=3)
+    frame2.rowconfigure(6, pad=3)
+    frame2.rowconfigure(7, pad=3)
+    frame2.rowconfigure(8, pad=3)
 
     #display ui
     labackground = PhotoImage(file="icons/background.gif")
@@ -68,7 +74,7 @@ class musicAnalyser(Frame):
     canvas.create_image(0, 0, anchor="nw", image=labackground)
     time_display=canvas.create_text(10, 25, anchor="nw", fill='cornsilk', text = "Music Analyser")
     song_display=canvas.create_text(220,40, anchor="nw", fill='cornsilk', text = "by: Sreenidhin C C")
-    song_duration=canvas.create_text(220,65, anchor="nw", fill='cornsilk', text = "Audrey Technologies")
+    song_duration=canvas.create_text(220,65, anchor="nw", fill='cornsilk', text = "Techstack Innovations LLP")
 
     #control UI
     pauseicon=PhotoImage(file="icons/pause.gif")
@@ -95,13 +101,13 @@ class musicAnalyser(Frame):
     #Listbox for Playlist from directory choosen
     musiclistcanvas=Canvas(frame1, bg='#333')
     musiclistcanvas.grid(row=3, columnspan = 5, sticky=E+W+N+S)
-    musiclistbox = Listbox(musiclistcanvas, height=31, width=51)
+    musiclistbox = Listbox(musiclistcanvas, height=31, width=51,)
     musiclistbox.grid(row=3, sticky="ew", padx=7, pady=5)
 
 
 
     #Link scrollbar to canvas
-    vertscrollbar =Scrollbar(musiclistcanvas, orient="vertical", command=musiclistcanvas.yview)
+    vertscrollbar = Scrollbar(musiclistcanvas, orient="vertical", command=musiclistcanvas.yview)
     vertscrollbar.grid(row=3, column=5, sticky='ns')
     musiclistcanvas.configure(yscrollcommand=vertscrollbar.set)
 
@@ -147,13 +153,37 @@ class musicAnalyser(Frame):
     tree.heading("genre", text="Predicted Genre")
     tree.heading("title", text="Title")
 
-    tree.grid(row = 2, columnspan = 5, rowspan =4, padx = 10, pady = 30, sticky = N+S+E+W)
+    tree.grid(row = 2, columnspan = 5, rowspan =2, padx = 10, pady = 30, sticky = N+S+E+W)
+
+    cutlabel = Label(frame2, text="CUT MP3")
+    cutlabel.grid(row = 4, columnspan = 5, padx = 10, pady = 30, sticky = "EW")
+
+    #button to select file
+    mp3selbutton = Button(frame2, text="Choose MP3", command = lambda:choosefile(scalef,scaleb))
+    mp3selbutton.grid(row = 5, column = 0)
+
+    #scale one
+    scalef= Scale(frame2, from_=0, to=100, variable =scalevar, tickinterval=50, orient=HORIZONTAL, command = lambda scalevar: setscaleb(scalevar, scaleb))
+    scalef.grid(row = 6, columnspan = 5, padx = 10, pady = 30, sticky = "EW")
+
+    #scale two
+    scaleb = Scale(frame2, from_=scalevar, to=100, tickinterval=50, orient=HORIZONTAL)
+    scaleb.grid(row = 7, columnspan = 5, padx = 10, pady = 30, sticky = "EW")
+
+    #button to select o/p folder
+    mp3outbutton = Button(frame2, text="Save to", command = choosesavefolder)
+    mp3outbutton.grid(row = 8, column = 2)
+
+    #button start action cut
+    cutbutton = Button(frame2, text="OK", command = lambda:startcut(scalef, scaleb))
+    cutbutton.grid(row = 8, column = 3)
 
 
 def main():
 
     global listofsongs, realnames, index, pause, title, directory
-    global genre, musiclistbox, tree
+    global genre, musiclistbox, tree, duration, scaleb, scalef, scalevar
+    scalevar =0
     root = Tk()
     app = musicAnalyser(root)
 
