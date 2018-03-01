@@ -1,6 +1,6 @@
 # ============================================
 # Auther: C C Sreenidhin
-# Company: Audrey Technologies
+# Company: Techstack Innovations LLP
 # Project: Music Analyser
 # Date:01-09-2017
 # ============================================
